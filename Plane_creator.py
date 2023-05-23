@@ -81,13 +81,24 @@ def mesh_pydata() -> Tuple[List[Tuple]]:
     print(pydata)
     return pydata
 
+def create_collection(collection_name: str) -> Collection:
+    '''
+    Создает новую коллекцию с указанным именем, если ее не существует,
+    или возвращает существующую коллекцию с указанным именем.
+    '''
+    if collection_name in bpy.data.collections:
+        return bpy.data.collections[collection_name]
+    else:
+        collection = bpy.data.collections.new(collection_name)
+        bpy.context.scene.collection.children.link(collection)
+        return collection
+
 
 def create_obj():
     print("\nSTART")
     mesh_name = "TEST"
     col_name = "Test Pydata"
-    assert col_name in bpy.data.collections
-    col = bpy.data.collections[col_name]
+    col = create_collection(col_name)
     mesh = mesh_new(mesh_name)
     assert type(mesh) == Mesh
     obj = obj_new(mesh_name, mesh)
